@@ -1,0 +1,24 @@
+version: 0.2
+
+phases:
+  build:
+    commands:
+      - echo "Zipping index-photos Lambda..."
+      - cd backend/index-photos
+      - zip -r ../../index-photos.zip .
+      - cd ../..
+
+      - echo "Zipping search-photos Lambda..."
+      - cd backend/search-photos
+      - zip -r ../../search-photos.zip .
+      - cd ../..
+
+      - echo "Updating index-photos Lambda..."
+      - aws lambda update-function-code --function-name index-photos --zip-file fileb://index-photos.zip --region us-east-1
+
+      - echo "Updating search-photos Lambda..."
+      - aws lambda update-function-code --function-name search-photos --zip-file fileb://search-photos.zip --region us-east-1
+
+artifacts:
+  files:
+    - '**/*'
